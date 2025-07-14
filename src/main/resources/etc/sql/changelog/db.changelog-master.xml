@@ -1,0 +1,103 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.4.xsd">
+
+    <!-- Создание последовательностей -->
+    <changeSet id="1-create-sequences" author="egor">
+        <createSequence sequenceName="user_id_seq" startValue="1" incrementBy="1"/>
+        <createSequence sequenceName="department_seq" startValue="1" incrementBy="1"/>
+        <createSequence sequenceName="time_entry_seq" startValue="1" incrementBy="1"/>
+    </changeSet>
+
+    <!-- Таблица departments -->
+    <changeSet id="2-create-departments-table" author="egor">
+        <createTable tableName="departments">
+            <column name="id" type="BIGINT">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <!-- Таблица employees -->
+    <changeSet id="3-create-employees-table" author="egor">
+        <createTable tableName="employees">
+            <column name="id" type="BIGINT">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="password" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="position" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="department_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="role" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="chief_id" type="BIGINT"/>
+        </createTable>
+
+        <addForeignKeyConstraint
+                baseTableName="employees"
+                baseColumnNames="department_id"
+                constraintName="fk_employees_departments"
+                referencedTableName="departments"
+                referencedColumnNames="id"/>
+
+        <addForeignKeyConstraint
+                baseTableName="employees"
+                baseColumnNames="chief_id"
+                constraintName="fk_employees_chief"
+                referencedTableName="employees"
+                referencedColumnNames="id"/>
+    </changeSet>
+
+    <!-- Таблица time_entries -->
+    <changeSet id="4-create-time-entries-table" author="egor">
+        <createTable tableName="time_entries">
+            <column name="id" type="BIGINT">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="work_date" type="DATE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="worked_minutes" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="employee_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_by_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint
+                baseTableName="time_entries"
+                baseColumnNames="employee_id"
+                constraintName="fk_time_entries_employee"
+                referencedTableName="employees"
+                referencedColumnNames="id"/>
+
+        <addForeignKeyConstraint
+                baseTableName="time_entries"
+                baseColumnNames="created_by_id"
+                constraintName="fk_time_entries_created_by"
+                referencedTableName="employees"
+                referencedColumnNames="id"/>
+    </changeSet>
+
+</databaseChangeLog>

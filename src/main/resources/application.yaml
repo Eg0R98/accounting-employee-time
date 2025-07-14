@@ -1,0 +1,38 @@
+# Настройка порта сервера
+server:
+  port: 8080  # Порт, на котором будет запущен Spring Boot приложение
+
+spring:
+  datasource:
+    url: jdbc:postgresql://${DB_HOST:db}:5432/postgres  # URL подключения к базе данных PostgreSQL
+    username: ${DB_USERNAME}                        # Имя пользователя для БД, берётся из переменной окружения
+    password: ${DB_PASSWORD}                        # Пароль для подключения к БД, из переменной окружения
+    driver-class-name: org.postgresql.Driver       # Класс драйвера для PostgreSQL
+
+  liquibase:
+    change-log: classpath:etc/sql/changelog/db.changelog-master.xml  # Путь к главному файлу миграций Liquibase
+    enabled: true                                            # Включение Liquibase миграций при старте приложения
+
+  jpa:
+    hibernate:
+      ddl-auto: validate  # Проверка схемы БД с сущностями, без автоматического изменения структуры
+
+  output:
+    ansi:
+      enabled: ALWAYS    # Всегда включать цветной вывод в консоли (для лучшей читаемости логов)
+
+token:
+  signing:
+    key: ${JWT_SIGNING_KEY}  # Секретный ключ для подписи JWT токенов, передаётся через переменную окружения
+
+app:
+  admin:
+    username: ${ADMIN_USERNAME}  # Имя пользователя администратора, создаваемого при старте приложения
+    email: ${ADMIN_EMAIL}        # Email администратора
+    password: ${ADMIN_PASSWORD}  # Пароль администратора
+
+logging:
+  level:
+    liquibase: DEBUG  # Включить детальное логирование Liquibase для отладки миграций
+    org.springframework.boot.autoconfigure.liquibase: DEBUG  # Логирование автоконфигурации Liquibase в Spring Boot
+    liquibase.executor.jvm.JdbcExecutor: DEBUG  # Подробное логирование SQL-запросов, которые выполняет Liquibase
