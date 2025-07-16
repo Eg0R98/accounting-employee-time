@@ -54,7 +54,7 @@ docker compose up -d
 
 Скачать готовый образ из Docker Hub:
    
-docker pull <ваш-dockerhub-логин>/accounting-time:latest
+docker pull egorst684/accounting-time:latest
 
 ## 🛠 4. Локальная сборка (если нужно)
 
